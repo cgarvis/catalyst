@@ -47,6 +47,7 @@ defmodule Catalyst.Navbar do
   end
 
   attr(:class, :string, default: nil)
+  attr :current, :boolean, default: false
   slot(:inner_block)
 
   def navbar_item(assigns) do

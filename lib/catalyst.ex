@@ -3,9 +3,9 @@ defmodule Catalyst do
   Documentation for `Catalyst`.
   """
 
-  defmacro __using(_) do
+  defmacro __using__(_) do
     quote do
-      import Catalyst.{Navbar}
+      import Catalyst.{Badge,DescriptionList,Divider,Navbar,Sidebar}
     end
   end
 end
