@@ -6,8 +6,9 @@ defmodule Catalyst.Divider do
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
   def divider(assigns) do
-   ~H"""
-    <hr role="presentation"
+    ~H"""
+    <hr
+      role="presentation"
       class={[
         "w-full border-t",
         @soft && "border-zinc-950/5 dark:border-white/5",
@@ -16,6 +17,6 @@ defmodule Catalyst.Divider do
       ]}
       {@rest}
     />
-"""
+    """
   end
 end

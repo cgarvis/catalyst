@@ -1,8 +1,77 @@
 defmodule Catalyst.Navbar do
   use Phoenix.Component
 
+  @moduledoc ~S"""
+
+  ## Examples
+
+  ### Basic example
+
+  Use the Navbar, NavbarSection and NavbarItem components to build a basic navbar with navigation links:
+
+      <.navbar>
+        <.navbar_section>
+          <.navbar_item>Home</.navbar_item>
+          <.navbar_item>About</.navbar_item>
+          <.navbar_item>Contact</.navbar_item>
+        </.navbar_section>
+      <./navbar>
+
+  The NavbarItem component can be used either as a Link by providing an href prop or as a Button by omitting the href prop.
+
+  ## With Logo
+
+  Add your own logo as an image or component at the beginning of your navbar:
+
+      <.navbar>
+        <.link href="/" aria-label="Home">
+          <.logo />
+        </.link>
+
+        <.navbar_section>
+          <.navbar_item>
+            <.logo />
+          </.navbar_item>
+        </.navbar_section>
+      <./navbar>  
+
+  To best fit the navbar design, we recommend making your logo 40px tall at mobile sizes, and 32px tall at the sm breakpoint above.
+
+  ## With active state
+
+  Use the current prop to specify which NavbarItem is the current navigation item:
+
+      <.navbar>
+        <.link href="/" aria-label="Home">
+          <.logo />
+        </.link>
+
+        <.navbar_section>
+          <.navbar_item current>Home</.navbar_item>
+          <.navbar_item>About</.navbar_item>
+          <.navbar_item>Contact</.navbar_item>
+        </.navbar_section>
+      <./navbar>
+
+  ## With icon links
+
+      <.navbar>
+        <.link href="/" aria-label="Home">
+          <.logo />
+        </.link>
+
+        <.navbar_spacer />
+
+        <.navbar_section>
+          <.navbar_item href="/search">
+            <.icon name="hero-magnifying-glass" />
+          </.navbar_item>
+        </.navbar_section>
+      <./navbar>
+  """
+
   attr(:class, :string, default: nil)
-  attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the flash container")
+  attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the navbar container")
   slot(:inner_block)
 
   def navbar(assigns) do
@@ -14,44 +83,90 @@ defmodule Catalyst.Navbar do
   end
 
   attr(:class, :string, default: nil)
-  attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the flash container")
-  slot(:inner_block)
+  attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the divider")
 
   def navbar_divider(assigns) do
     ~H"""
     <div aria-hidden="true" class={["h-6 w-px bg-zinc-950/10 dark:bg-white/10", @class]} {@rest}>
-      <!-- empty div -->
     </div>
     """
   end
 
   attr(:class, :string, default: nil)
+  attr(:rest, :global)
   slot(:inner_block)
 
   def navbar_section(assigns) do
     ~H"""
-    <div class={["flex items-center gap-3", @class]}>
+    <div class={["flex items-center gap-3", @class]} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
   end
 
   attr(:class, :string, default: nil)
+  attr(:rest, :global)
 
   def navbar_spacer(assigns) do
     ~H"""
-    <div aria-hidden="true" class={["-ml-4 flex-1", @class]}>
-      <!-- empty div -->
-    </div>
+    <div aria-hidden="true" class={["-ml-4 flex-1", @class]} {@rest}></div>
     """
   end
 
   attr(:class, :string, default: nil)
-  attr :current, :boolean, default: false
+  attr(:current, :boolean, default: false)
+  attr(:href, :string, default: nil)
+  attr(:rest, :global)
   slot(:inner_block)
+  slot(:icon)
+  slot(:avatar)
+
+  def navbar_item(%{href: nil} = assigns) do
+    ~H"""
+    <span class={["relative", @class]}>
+      <button class={navbar_item_classes()} data-current={@current} {@rest}>
+        <div class="touch-target">
+          <%= render_slot(@inner_block) %>
+        </div>
+      </button>
+      <%= if @current do %>
+        <span class="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-zinc-950 dark:bg-white">
+        </span>
+      <% end %>
+    </span>
+    """
+  end
 
   def navbar_item(assigns) do
-    classes = [
+    ~H"""
+    <span class={["relative", @class]}>
+      <.link href={@href} class={navbar_item_classes()} data-current={@current} {@rest}>
+        <div class="touch-target">
+          <%= render_slot(@inner_block) %>
+        </div>
+      </.link>
+      <%= if @current do %>
+        <span class="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-zinc-950 dark:bg-white">
+        </span>
+      <% end %>
+    </span>
+    """
+  end
+
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+  slot(:inner_block)
+
+  def navbar_label(assigns) do
+    ~H"""
+    <span class={["truncate", @class]} {@rest}>
+      <%= render_slot(@inner_block) %>
+    </span>
+    """
+  end
+
+  defp navbar_item_classes do
+    [
       # Base
       "relative flex min-w-0 items-center gap-3 rounded-lg p-2 text-left text-base/6 font-medium text-zinc-950 sm:text-sm/5",
       # Leading icon/icon-only
@@ -69,25 +184,5 @@ defmodule Catalyst.Navbar do
       "dark:data-[hover]:bg-white/5 dark:data-[slot=icon]:*:data-[hover]:fill-white",
       "dark:data-[active]:bg-white/5 dark:data-[slot=icon]:*:data-[active]:fill-white"
     ]
-
-    ~H"""
-    <span class={["relative", @class]}>
-      <.link class={classes} data-current={@current}>
-        <%= render_slot(@inner_block) %>
-      </.link>
-    </span>
-    """
-  end
-
-  attr(:class, :string, default: nil)
-  slot(:inner_block)
-
-  def navbar_label(assigns) do
-    ~H"""
-    <span class={["truncate", @class]}>
-      <%= render_slot(@inner_block) %>
-    </span>
-    """
   end
 end
-

@@ -24,3 +24,6 @@ catalyst-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# catalyst files
+/priv/catalyst-typescript

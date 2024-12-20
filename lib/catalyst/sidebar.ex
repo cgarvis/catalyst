@@ -17,10 +17,13 @@ defmodule Catalyst.Sidebar do
 
   def sidebar_header(assigns) do
     ~H"""
-    <div class={[
-      "flex flex-col border-b border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
-      @class
-    ]} {@rest}>
+    <div
+      class={[
+        "flex flex-col border-b border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
+        @class
+      ]}
+      {@rest}
+    >
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -31,10 +34,13 @@ defmodule Catalyst.Sidebar do
 
   def sidebar_body(assigns) do
     ~H"""
-    <div class={[
-      "flex flex-1 flex-col overflow-y-auto p-4 [&>[data-slot=section]+[data-slot=section]]:mt-8",
-      @class
-    ]} {@rest}>
+    <div
+      class={[
+        "flex flex-1 flex-col overflow-y-auto p-4 [&>[data-slot=section]+[data-slot=section]]:mt-8",
+        @class
+      ]}
+      {@rest}
+    >
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -45,10 +51,13 @@ defmodule Catalyst.Sidebar do
 
   def sidebar_footer(assigns) do
     ~H"""
-    <div class={[
-      "flex flex-col border-t border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
-      @class
-    ]} {@rest}>
+    <div
+      class={[
+        "flex flex-col border-t border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
+        @class
+      ]}
+      {@rest}
+    >
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -67,7 +76,6 @@ defmodule Catalyst.Sidebar do
 
   attr :class, :string, default: nil
   attr :rest, :global
-
 
   def sidebar_divider(assigns) do
     ~H"""
@@ -102,7 +110,6 @@ defmodule Catalyst.Sidebar do
   slot :avatar
 
   def sidebar_item(assigns) do
-
     ~H"""
     <span class="relative">
       <%= if @current do %>
@@ -115,7 +122,11 @@ defmodule Catalyst.Sidebar do
           <%= render_slot(@inner_block) %>
         </.link>
       <% else %>
-        <button class={["cursor-default" | sidebar_item_classes(@class)]} data-current={@current} {@rest}>
+        <button
+          class={["cursor-default" | sidebar_item_classes(@class)]}
+          data-current={@current}
+          {@rest}
+        >
           <%= render_slot(@icon) %>
           <%= render_slot(@avatar) %>
           <%= render_slot(@inner_block) %>
